@@ -9,7 +9,7 @@ tags:
   - systems biology
   - cell differentiation
 authors:
-  - name: [Michael P.H. Stumpf]
+  - name: Michael P.H. Stumpf
   orcid: 0000-0002-3577-1222
   affiliation: 1,2,3
 affiliations:
