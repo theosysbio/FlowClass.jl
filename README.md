@@ -20,7 +20,7 @@ This package provides computational tools to test and classify dynamical systems
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/username/FlowClass.jl")
+Pkg.add(url="https://github.com/Theosysbio/FlowClass.jl")
 ```
 
 Or for local development:
