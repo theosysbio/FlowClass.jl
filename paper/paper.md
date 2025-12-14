@@ -1,4 +1,5 @@
 ---
+---
 title: 'FlowClass.jl: Classifying Dynamical Systems by Structural Properties in Julia'
 tags:
   - Julia
@@ -10,15 +11,15 @@ tags:
   - cell differentiation
 authors:
   - name: Michael P.H. Stumpf
-  orcid: 0000-0002-3577-1222
-  affiliation: 1,2,3
+    orcid: 0000-0002-3577-1222
+    affiliation: "1,2,3"
 affiliations:
   - name: School of BioScience, University of Melbourne, Melbourne Australia
-  index: 1
--  name: School of Mathematics and Statistics, University of Melbourne, Melbourne Australia
-  index: 2
--  name: Cell Bauhaus PTY LTD, Melbourne Australia
-  index: 3
+    index: 1
+  - name: School of Mathematics and Statistics, University of Melbourne, Melbourne Australia
+    index: 2
+  - name: Cell Bauhaus PTY LTD, Melbourne Australia
+    index: 3
 date: 13 December 2025
 bibliography: paper.bib
 ---
