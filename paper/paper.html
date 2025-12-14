@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>paper</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h2 id="section">—</h2>
+<p>title: ‘FlowClass.jl: Classifying Dynamical Systems by Structural Properties in Julia’ tags: - Julia - dynamical systems - gradient systems - Morse-Smale - Waddington landscape - systems biology - cell differentiation authors: - name: Michael P.H. Stumpf orcid: 0000-0002-3577-1222 affiliation: “1,2,3” affiliations: - name: School of BioScience, University of Melbourne, Melbourne Australia index: 1 - name: School of Mathematics and Statistics, University of Melbourne, Melbourne Australia index: 2 - name: Cell Bauhaus PTY LTD, Melbourne Australia index: 3 date: 15 December 2025 bibliography: paper.bib —</p>
+<h1 id="summary">Summary</h1>
+<p><code>FlowClass.jl</code> is a Julia package <span class="citation" data-cites="Bezanson:2017">Roesch et al. (2023)</span> for classifying continuous-time dynamical systems into a hierarchy of structural classes: Gradient, Gradient-like, Morse-Smale, Structurally Stable, and General. Given a vector field <span class="math inline"><strong>F</strong>(<strong>x</strong>)</span> defining the system <span class="math inline"><em>d</em><strong>x</strong>/<em>d</em><em>t</em> = <strong>F</strong>(<strong>x</strong>)</span>, the package performs a battery of computational tests—Jacobian symmetry analysis, curl magnitude estimation, fixed point detection and stability classification, periodic orbit detection, and stable/unstable manifold computation—to determine where the system sits within the classification hierarchy. This classification has direct implications for qualitative behaviour: gradient systems cannot oscillate, Morse-Smale systems are structurally stable in less than 3 dimensions, and general systems may exhibit chaos. Much of classical developmental theory going back to Waddington’s epigenetic landscape <span class="citation" data-cites="Waddington1957">(Waddington 1957)</span> rests on an implicit assumption of gradient dynamics.</p>
+<p>The package is designed with applications in systems and developmental biology in mind, particularly the analysis of gene regulatory networks and cell fate decision models in the context of Waddington’s epigenetic landscape. It provides tools to assess whether a landscape metaphor is appropriate for a given dynamical model, and to quantify the magnitude of non-gradient (curl) dynamics.</p>
+<h1 id="statement-of-need">Statement of Need</h1>
+<p>Dynamical systems models are ubiquitous in biology, physics, and engineering <span class="citation" data-cites="Strogatz2015">(Strogatz 2015)</span>. A central question when analysing such models is whether the system can be understood in terms of a potential landscape—that is, whether trajectories follow the gradient of a potential function toward attracting states. This question is especially pertinent in developmental biology <span class="citation" data-cites="Huang2007">Moris, Pina, and Arias (2016)</span>, where Waddington’s epigenetic landscape provides a powerful metaphor for cell differentiation <span class="citation" data-cites="Waddington1957">(Waddington 1957)</span>. However, as recent work has emphasised, most biological systems are <em>not</em> gradient systems: they exhibit curl dynamics arising from non-reciprocal interactions in gene regulatory networks <span class="citation" data-cites="Brackston2018 Wang2015">(Brackston, Lakatos, and Stumpf 2018; Wang 2015)</span>.</p>
+<p>Despite the theoretical importance of this distinction <span class="citation" data-cites="Smale1967">Palis and Melo (1982)</span>, there has been no comprehensive software package for computationally classifying dynamical systems by their structural properties. Existing tools focus on specific aspects—bifurcation analysis, Lyapunov exponent computation, or trajectory simulation—but do not provide an integrated framework for structural classification. <code>FlowClass.jl</code> fills this gap by implementing a systematic classification pipeline that moves from the most restrictive class (gradient systems) to the most general, providing quantitative measures at each stage. <embed src="JOSS-Fig1.pdf" /> <em>Figure 1. Waddington’s epigenetic landscape showing potential wells corresponding to cell fates. On the left hand side the flow is purely gradient. On the right hand side the flow has curl components and the dynamics are no longer determined by the landscape.</em></p>
+<p>The classification has practical consequences. For gradient systems, the potential function fully characterises the dynamics, and forward and reverse transition paths coincide. For systems with even moderate curl fluxes, minimum action paths for transitions in opposite directions differ, which has implications for understanding differentiation versus reprogramming in stem cell biology <span class="citation" data-cites="Brackston2018">Guillemin and Stumpf (2021)</span>. By quantifying the curl-to-gradient ratio, researchers can assess the validity of landscape-based analyses for their specific models. This for example, makes it possible to infer aspects of stem cell dynamics from single cell data <span class="citation" data-cites="Liu2024">(Liu et al. 2024)</span>.</p>
+<h1 id="classification-of-dynamical-systems">Classification of Dynamical Systems</h1>
+<p><strong>Table 1.</strong> Properties of dynamical system classes in the classification hierarchy.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Gradient</th>
+<th>Gradient-like</th>
+<th>Morse-Smale</th>
+<th>Generic</th>
+<th>General</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Curl</td>
+<td>Zero everywhere</td>
+<td>Near zero/small</td>
+<td>Non-zero possible</td>
+<td>Any value</td>
+<td>Any value</td>
+</tr>
+<tr class="even">
+<td>Jacobian</td>
+<td>Symmetric (J = Jᵀ)</td>
+<td>Nearly symmetric</td>
+<td>No requirement</td>
+<td>No requirement</td>
+<td>No requirement</td>
+</tr>
+<tr class="odd">
+<td>Path integrals</td>
+<td>Path-independent</td>
+<td>Nearly path-independent</td>
+<td>Path-dependent</td>
+<td>Path-dependent</td>
+<td>Path-dependent</td>
+</tr>
+<tr class="even">
+<td>Periodic orbits</td>
+<td>None</td>
+<td>None</td>
+<td>Hyperbolic only</td>
+<td>Hyperbolic &amp; non-hyperbolic</td>
+<td>Any</td>
+</tr>
+<tr class="odd">
+<td>Critical points</td>
+<td>All hyperbolic</td>
+<td>All hyperbolic</td>
+<td>All hyperbolic</td>
+<td>Non-hyperbolic possible at bifurcations</td>
+<td>Any</td>
+</tr>
+<tr class="even">
+<td>Lyapunov function</td>
+<td>Global (potential V)</td>
+<td>Global</td>
+<td>Local only</td>
+<td>Local (away from bifurcations)</td>
+<td>May not exist</td>
+</tr>
+<tr class="odd">
+<td>Transversality</td>
+<td>N/A (no periodic orbits)</td>
+<td>N/A</td>
+<td>Required</td>
+<td>May have tangencies</td>
+<td>Not required</td>
+</tr>
+</tbody>
+</table>
+<p>Our ability to make qualitative statements about a dynamical system depends crucially on the nature of the dynamics <span class="citation" data-cites="Smale1967">Palis and Melo (1982)</span>. The qualitative aspects can deliver profound biological systems. If stem cell differentiation were to follow gradient dynamics, for example, then the forward and backward paths through gene expression space would be identical <span class="citation" data-cites="Guillemin2021">Vittadello et al. (2025)</span>. For gradient systems, and gradient-like systems we have access to Lyapunov functions, and concepts from catastrophe theory can be applied and yield powerful insights <span class="citation" data-cites="Rand2021">(Rand et al. 2021)</span>.</p>
+<p>For more general dynamical systems we cannot fall back on such elegant theory. A main focus in the design of<code>FlowClass.jl</code> was to classify dynamical systems into the relevant categories that determine whether or not a given system (at least in the specific parameterisation considered). The routines provided as part of the package make it possible to determine the characterising features of different classes of dynamical systems, (c.f. Table 1).</p>
+<h1 id="key-features">Key Features</h1>
+<p><strong>Jacobian analysis.</strong> The package computes Jacobian matrices using automatic differentiation via <code>ForwardDiff.jl</code> and tests for symmetry. For a gradient system <span class="math inline"><strong>F</strong> =  − ∇<em>V</em></span>, the Jacobian equals the negative Hessian and is therefore symmetric. The relative symmetry error <span class="math inline">∥(<em>J</em> − <em>J</em><sup>⊤</sup>)/2∥<sub><em>F</em></sub>/∥<em>J</em>∥<sub><em>F</em></sub></span> provides a scale-independent measure of deviation from gradient structure.</p>
+<p><strong>Curl quantification.</strong> For 2D and 3D systems, <code>FlowClass.jl</code> computes the curl directly. For higher-dimensional systems, it uses the Frobenius norm of the antisymmetric part of the Jacobian as a generalised curl measure. The curl-to-gradient ratio indicates the relative strength of rotational versus potential-driven dynamics.</p>
+<p><strong>Fixed point analysis.</strong> Multi-start optimisation via <code>NLsolve.jl</code> locates fixed points within user-specified bounds. Each fixed point is classified by eigenvalue analysis into stable nodes, unstable nodes, saddles, foci, centres, or non-hyperbolic points. The presence of non-hyperbolic fixed points excludes the system from the Morse-Smale class.</p>
+<p><strong>Periodic orbit detection.</strong> Poincaré section methods detect limit cycles, and Floquet multiplier analysis determines their stability. Gradient and gradient-like systems cannot possess periodic orbits; their presence indicates at least Morse-Smale classification.</p>
+<p><strong>Manifold computation.</strong> For saddle points, the package computes stable and unstable manifolds by integrating trajectories from initial conditions perturbed along eigenvector directions. Transversality of manifold intersections is assessed numerically as this is a requirement for Morse-Smale structure.</p>
+<p><strong>Integrated classification.</strong> The <code>classify_system</code> function orchestrates all analyses and returns a <code>ClassificationResult</code> containing the system class, all detected invariant sets, quantitative measures (Jacobian symmetry, curl ratio), and a confidence score.</p>
+<h1 id="example-stem-cell-differentiation">Example: Stem Cell Differentiation</h1>
+<p>As a demonstration, <code>FlowClass.jl</code> includes an implementation of the stem cell differentiation model from <span class="citation" data-cites="Brackston2018">Brackston, Lakatos, and Stumpf (2018)</span>, who built on earlier work by <span class="citation" data-cites="Chickarmane2012">(<strong>Chickarmane2012?</strong>)</span>, which describes the dynamics of pluripotency factors (Nanog, Oct4-Sox2, Fgf4) and the differentiation marker Gata6. The model exhibits multiple stable states corresponding to pluripotent and differentiated cell fates, with a saddle point representing the transition state. Classification reveals significant curl dynamics, confirming that the system is not gradient and that differentiation and reprogramming paths will differ—a key biological insight.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> FlowClass</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> DynamicalSystem(stem_cell_model<span class="op">,</span> <span class="fl">4</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>bounds <span class="op">=</span> ((<span class="fl">0.0</span><span class="op">,</span> <span class="fl">100.0</span>)<span class="op">,</span> (<span class="fl">0.0</span><span class="op">,</span> <span class="fl">100.0</span>)<span class="op">,</span> (<span class="fl">0.0</span><span class="op">,</span> <span class="fl">100.0</span>)<span class="op">,</span> (<span class="fl">0.0</span><span class="op">,</span> <span class="fl">120.0</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> classify_system(ds<span class="op">,</span> bounds)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>print_classification(result)</span></code></pre></div>
+<h1 id="related-software">Related Software</h1>
+<p>Several Julia packages provide complementary functionality. <code>DifferentialEquations.jl</code> <span class="citation" data-cites="Rackauckas2017">(Rackauckas and Nie 2017)</span> offers comprehensive ODE/SDE solvers but does not perform structural classification. <code>BifurcationKit.jl</code> focuses on continuation and bifurcation analysis. <code>DynamicalSystems.jl</code> <span class="citation" data-cites="Datseris2018">(Datseris 2018)</span> provides tools for chaos detection and attractor characterisation. <code>GAIO.jl</code> <span class="citation" data-cites="GAIO2025">(<strong>GAIO2025?</strong>)</span> provides numerical routines for the global analysis of dynamical systems. <code>FlowClass.jl</code> complements these by addressing a distinct question: not <em>how</em> a system behaves, but <em>what kind</em> of system it is structurally.</p>
+<p>In Python, <code>PyDSTool</code> and <code>PySCeS</code> offer dynamical systems modelling for biology, but neither provides systematic structural classification. The landscape and flux decomposition methods of <span class="citation" data-cites="Wang2015">Wang (2015)</span> are related theoretically; <code>FlowClass.jl</code> provides practical tools for the classification aspect of this framework.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Our ability to make qualitative statements about a dynamical system depends crucially on the nature of the dynamics. The qualitative aspects can deliver profound biological systems. If stem cell differentiation were to follow gradient dynamics, for example, then the forward and backward paths through gene expression space would be identical <span class="citation" data-cites="Guillemin2021">Vittadello et al. (2025)</span>. For gradient systems, and gradient-like systems we have access to Lyapunov functions, and concepts from catastrophe theory can be applied and yield powerful insights <span class="citation" data-cites="Rand2021">(Rand et al. 2021)</span>.</p>
+<p>For more general dynamical systems we cannot fall back on such elegant theory. A main focus in the design of<code>FlowClass.jl</code> was to classify dynamical systems into the relevant categories that determine whether or not a given system (at least in the specific parameterisation considered). The routines provided as part of the package make</p>
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>The author thanks the Australian Research Council for financial support through an ARC Laureate Fellowship (FL220100005) # References</p>
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-Bezanson:2017" class="csl-entry" role="doc-biblioentry">
+Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. <span>“Julia: A Fresh Approach to Numerical Computing.”</span> <em>SIAM Review</em> 59 (1): 65–98. <a href="https://doi.org/10.1137/141000671">https://doi.org/10.1137/141000671</a>.
+</div>
+<div id="ref-Brackston2018" class="csl-entry" role="doc-biblioentry">
+Brackston, Rowan D., Eszter Lakatos, and Michael P. H. Stumpf. 2018. <span>“Transition State Characteristics During Cell Differentiation.”</span> <em>PLoS Computational Biology</em> 14 (9): e1006405. <a href="https://doi.org/10.1371/journal.pcbi.1006405">https://doi.org/10.1371/journal.pcbi.1006405</a>.
+</div>
+<div id="ref-Datseris2018" class="csl-entry" role="doc-biblioentry">
+Datseris, George. 2018. <span>“<span class="nocase">DynamicalSystems.jl</span>: A <span>Julia</span> Software Library for Chaos and Nonlinear Dynamics.”</span> <em>Journal of Open Source Software</em> 3 (23): 598. <a href="https://doi.org/10.21105/joss.00598">https://doi.org/10.21105/joss.00598</a>.
+</div>
+<div id="ref-Guillemin2021" class="csl-entry" role="doc-biblioentry">
+Guillemin, Agathe, and Michael P. H. Stumpf. 2021. <span>“Noise and the Molecular Processes Underlying Cell Fate Decision-Making.”</span> <em>Physical Biology</em> 18 (1): 011002. <a href="https://doi.org/10.1088/1478-3975/abc9d1">https://doi.org/10.1088/1478-3975/abc9d1</a>.
+</div>
+<div id="ref-Huang2007" class="csl-entry" role="doc-biblioentry">
+Huang, Sui, Yan-Ping Guo, Gwenael May, and Tariq Enver. 2007. <span>“Bifurcation Dynamics in Lineage-Commitment in Bipotent Progenitor Cells.”</span> <em>Developmental Biology</em> 305 (2): 695–713. <a href="https://doi.org/10.1016/j.ydbio.2007.02.036">https://doi.org/10.1016/j.ydbio.2007.02.036</a>.
+</div>
+<div id="ref-Liu2024" class="csl-entry" role="doc-biblioentry">
+Liu, Y, Stephen Y. Zhang, Istvan Kleijn, and Michael P H Stumpf. 2024. <span>“Approximate Bayesian Computation for Inferring Waddington Landscapes from Single-Cell Data.”</span> <em>Royal Society Open Science</em> 11: 231697. <a href="https://doi.org/10.1098/rsos.231697">https://doi.org/10.1098/rsos.231697</a>.
+</div>
+<div id="ref-Moris2016" class="csl-entry" role="doc-biblioentry">
+Moris, Naomi, Cristina Pina, and Alfonso Martinez Arias. 2016. <span>“Transition States and Cell Fate Decisions in Epigenetic Landscapes.”</span> <em>Nature Reviews Genetics</em> 17 (11): 693–703. <a href="https://doi.org/10.1038/nrg.2016.98">https://doi.org/10.1038/nrg.2016.98</a>.
+</div>
+<div id="ref-PalisDeMelo1982" class="csl-entry" role="doc-biblioentry">
+Palis, Jacob, and Welington de Melo. 1982. <em>Geometric Theory of Dynamical Systems: An Introduction</em>. New York: Springer-Verlag. <a href="https://doi.org/10.1007/978-1-4612-5703-5">https://doi.org/10.1007/978-1-4612-5703-5</a>.
+</div>
+<div id="ref-Rackauckas2017" class="csl-entry" role="doc-biblioentry">
+Rackauckas, Christopher, and Qing Nie. 2017. <span>“<span class="nocase">DifferentialEquations.jl</span> – a Performant and Feature-Rich Ecosystem for Solving Differential Equations in <span>Julia</span>.”</span> <em>Journal of Open Research Software</em> 5 (1): 15. <a href="https://doi.org/10.5334/jors.151">https://doi.org/10.5334/jors.151</a>.
+</div>
+<div id="ref-Rand2021" class="csl-entry" role="doc-biblioentry">
+Rand, DA, A Raju, M Sáez, F Corson, and ED Siggia. 2021. <span>“Geometry of Gene Regulatory Dynamics.”</span> <em>Proc Natl Acad Sci U S A</em> 118 (38): e2109729118.
+</div>
+<div id="ref-Roesch2023" class="csl-entry" role="doc-biblioentry">
+Roesch, E, JG Greener, AL MacLean, H Nassar, C Rackauckas, TE Holy, and MPH Stumpf. 2023. <span>“Julia for Biologists.”</span> <em>Nat Methods</em> 20 (5): 655–64. <a href="https://doi.org/10.1038/s41592-023-01832-z">https://doi.org/10.1038/s41592-023-01832-z</a>.
+</div>
+<div id="ref-Smale1967" class="csl-entry" role="doc-biblioentry">
+Smale, Stephen. 1967. <span>“Differentiable Dynamical Systems.”</span> <em>Bulletin of the American Mathematical Society</em> 73 (6): 747–817. <a href="https://doi.org/10.1090/S0002-9904-1967-11798-1">https://doi.org/10.1090/S0002-9904-1967-11798-1</a>.
+</div>
+<div id="ref-Strogatz2015" class="csl-entry" role="doc-biblioentry">
+Strogatz, Steven H. 2015. <span>“Nonlinear Dynamics and Chaos: With Applications to Physics, Biology, Chemistry, and Engineering.”</span>
+</div>
+<div id="ref-Vittadello2025" class="csl-entry" role="doc-biblioentry">
+Vittadello, Sean T, Léo Diaz, Yujing Liu, Adriana Zanca, and Michael P H Stumpf. 2025. <span>“Towards a Mathematical Framework for Modelling Cell Fate Dynamics.”</span> <em>J Math Biol</em> 91 (5): 48. <a href="https://doi.org/10.1007/s00285-025-02287-w">https://doi.org/10.1007/s00285-025-02287-w</a>.
+</div>
+<div id="ref-Waddington1957" class="csl-entry" role="doc-biblioentry">
+Waddington, Conrad Hal. 1957. <em>The Strategy of the Genes: A Discussion of Some Aspects of Theoretical Biology</em>. London: Allen &amp; Unwin.
+</div>
+<div id="ref-Wang2015" class="csl-entry" role="doc-biblioentry">
+Wang, Jin. 2015. <span>“Landscape and Flux Theory of Non-Equilibrium Dynamical Systems with Application to Biology.”</span> <em>Advances in Physics</em> 64 (1): 1–137. <a href="https://doi.org/10.1080/00018732.2015.1037068">https://doi.org/10.1080/00018732.2015.1037068</a>.
+</div>
+</div>
+</body>
+</html>

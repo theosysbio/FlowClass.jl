@@ -20,7 +20,7 @@ affiliations:
     index: 2
   - name: Cell Bauhaus PTY LTD, Melbourne Australia
     index: 3
-date: 13 December 2025
+date: 15 December 2025
 bibliography: paper.bib
 ---
 
@@ -38,7 +38,7 @@ Despite the theoretical importance of this distinction [@Smale1967,@PalisDeMelo1
 ![](JOSS-Fig1.pdf)
 *Figure 1. Waddington's epigenetic landscape showing potential wells corresponding to cell fates. On the left hand side the flow is purely gradient. On the right hand side the flow has curl components and the dynamics are no longer determined by the landscape.*
 
-The classification has practical consequences. For gradient systems, the potential function fully characterises the dynamics, and forward and reverse transition paths coincide. For systems with even moderate curl fluxes, minimum action paths for transitions in opposite directions differ, which has implications for understanding differentiation versus reprogramming in stem cell biology [@Brackston2018,@Guillemin2020]. By quantifying the curl-to-gradient ratio, researchers can assess the validity of landscape-based analyses for their specific models. This for example, makes it possible to infer aspects of stem cell dynamics from single cell data [@Liu20024].
+The classification has practical consequences. For gradient systems, the potential function fully characterises the dynamics, and forward and reverse transition paths coincide. For systems with even moderate curl fluxes, minimum action paths for transitions in opposite directions differ, which has implications for understanding differentiation versus reprogramming in stem cell biology [@Brackston2018,@Guillemin2021]. By quantifying the curl-to-gradient ratio, researchers can assess the validity of landscape-based analyses for their specific models. This for example, makes it possible to infer aspects of stem cell dynamics from single cell data [@Liu2024].
 
 # Classification of Dynamical Systems
 
@@ -54,7 +54,7 @@ The classification has practical consequences. For gradient systems, the potenti
 | Lyapunov function | Global (potential V)     | Global                  | Local only        | Local (away from bifurcations)          | May not exist  |
 | Transversality    | N/A (no periodic orbits) | N/A                     | Required          | May have tangencies                     | Not required   |
 
-Our ability to make qualitative statements about a dynamical system depends crucially on the nature of the dynamics [@Smale1967,@PalisDeMelo1982,@ BrackstonPhysRevE2018]. The qualitative aspects can deliver profound biological systems. If stem cell differentiation were to follow gradient dynamics, for example, then the forward and backward paths through gene expression space would be identical [@Guillemin2020,Vittadello2025]. For gradient systems, and gradient-like systems we have access to Lyapunov functions, and concepts from catastrophe theory can be applied and yield powerful insights [@Rand2021]. 
+Our ability to make qualitative statements about a dynamical system depends crucially on the nature of the dynamics [@Smale1967,@PalisDeMelo1982,@ BrackstonPhysRevE2018]. The qualitative aspects can deliver profound biological systems. If stem cell differentiation were to follow gradient dynamics, for example, then the forward and backward paths through gene expression space would be identical [@Guillemin2021,@Vittadello2025]. For gradient systems, and gradient-like systems we have access to Lyapunov functions, and concepts from catastrophe theory can be applied and yield powerful insights [@Rand2021]. 
 
 For more general dynamical systems we cannot fall back on such elegant theory. A main focus in the design of`FlowClass.jl` was to classify dynamical systems into the relevant categories that determine whether or not a given system (at least in the specific parameterisation considered). The routines provided as part of the package make it possible to determine the characterising features of different classes of dynamical systems, (c.f. Table 1). 
 
@@ -93,7 +93,7 @@ Several Julia packages provide complementary functionality. `DifferentialEquatio
 In Python, `PyDSTool` and `PySCeS` offer dynamical systems modelling for biology, but neither provides systematic structural classification. The landscape and flux decomposition methods of @Wang2015 are related theoretically; `FlowClass.jl` provides practical tools for the classification aspect of this framework.
 
 # Conclusion
-Our ability to make qualitative statements about a dynamical system depends crucially on the nature of the dynamics. The qualitative aspects can deliver profound biological systems. If stem cell differentiation were to follow gradient dynamics, for example, then the forward and backward paths through gene expression space would be identical [@Guillemin2020,@Vittadello2025]. For gradient systems, and gradient-like systems we have access to Lyapunov functions, and concepts from catastrophe theory can be applied and yield powerful insights [@Rand2021]. 
+Our ability to make qualitative statements about a dynamical system depends crucially on the nature of the dynamics. The qualitative aspects can deliver profound biological systems. If stem cell differentiation were to follow gradient dynamics, for example, then the forward and backward paths through gene expression space would be identical [@Guillemin2021,@Vittadello2025]. For gradient systems, and gradient-like systems we have access to Lyapunov functions, and concepts from catastrophe theory can be applied and yield powerful insights [@Rand2021]. 
 
 For more general dynamical systems we cannot fall back on such elegant theory. A main focus in the design of`FlowClass.jl` was to classify dynamical systems into the relevant categories that determine whether or not a given system (at least in the specific parameterisation considered). The routines provided as part of the package make 
   
