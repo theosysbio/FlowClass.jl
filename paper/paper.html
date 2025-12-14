@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>paper</title>
+  <meta name="dcterms.date" content="2025-12-15" />
+  <title>FlowClass.jl: Classifying Dynamical Systems by Structural Properties in Julia</title>
   <style>
     html {
       line-height: 1.5;
@@ -231,8 +232,10 @@
   <![endif]-->
 </head>
 <body>
-<h2 id="section">—</h2>
-<p>title: ‘FlowClass.jl: Classifying Dynamical Systems by Structural Properties in Julia’ tags: - Julia - dynamical systems - gradient systems - Morse-Smale - Waddington landscape - systems biology - cell differentiation authors: - name: Michael P.H. Stumpf orcid: 0000-0002-3577-1222 affiliation: “1,2,3” affiliations: - name: School of BioScience, University of Melbourne, Melbourne Australia index: 1 - name: School of Mathematics and Statistics, University of Melbourne, Melbourne Australia index: 2 - name: Cell Bauhaus PTY LTD, Melbourne Australia index: 3 date: 15 December 2025 bibliography: paper.bib —</p>
+<header id="title-block-header">
+<h1 class="title">FlowClass.jl: Classifying Dynamical Systems by Structural Properties in Julia</h1>
+<p class="date">15 December 2025</p>
+</header>
 <h1 id="summary">Summary</h1>
 <p><code>FlowClass.jl</code> is a Julia package <span class="citation" data-cites="Bezanson:2017">Roesch et al. (2023)</span> for classifying continuous-time dynamical systems into a hierarchy of structural classes: Gradient, Gradient-like, Morse-Smale, Structurally Stable, and General. Given a vector field <span class="math inline"><strong>F</strong>(<strong>x</strong>)</span> defining the system <span class="math inline"><em>d</em><strong>x</strong>/<em>d</em><em>t</em> = <strong>F</strong>(<strong>x</strong>)</span>, the package performs a battery of computational tests—Jacobian symmetry analysis, curl magnitude estimation, fixed point detection and stability classification, periodic orbit detection, and stable/unstable manifold computation—to determine where the system sits within the classification hierarchy. This classification has direct implications for qualitative behaviour: gradient systems cannot oscillate, Morse-Smale systems are structurally stable in less than 3 dimensions, and general systems may exhibit chaos. Much of classical developmental theory going back to Waddington’s epigenetic landscape <span class="citation" data-cites="Waddington1957">(Waddington 1957)</span> rests on an implicit assumption of gradient dynamics.</p>
 <p>The package is designed with applications in systems and developmental biology in mind, particularly the analysis of gene regulatory networks and cell fate decision models in the context of Waddington’s epigenetic landscape. It provides tools to assess whether a landscape metaphor is appropriate for a given dynamical model, and to quantify the magnitude of non-gradient (curl) dynamics.</p>
@@ -330,7 +333,7 @@
 <p><strong>Manifold computation.</strong> For saddle points, the package computes stable and unstable manifolds by integrating trajectories from initial conditions perturbed along eigenvector directions. Transversality of manifold intersections is assessed numerically as this is a requirement for Morse-Smale structure.</p>
 <p><strong>Integrated classification.</strong> The <code>classify_system</code> function orchestrates all analyses and returns a <code>ClassificationResult</code> containing the system class, all detected invariant sets, quantitative measures (Jacobian symmetry, curl ratio), and a confidence score.</p>
 <h1 id="example-stem-cell-differentiation">Example: Stem Cell Differentiation</h1>
-<p>As a demonstration, <code>FlowClass.jl</code> includes an implementation of the stem cell differentiation model from <span class="citation" data-cites="Brackston2018">Brackston, Lakatos, and Stumpf (2018)</span>, who built on earlier work by <span class="citation" data-cites="Chickarmane2012">(<strong>Chickarmane2012?</strong>)</span>, which describes the dynamics of pluripotency factors (Nanog, Oct4-Sox2, Fgf4) and the differentiation marker Gata6. The model exhibits multiple stable states corresponding to pluripotent and differentiated cell fates, with a saddle point representing the transition state. Classification reveals significant curl dynamics, confirming that the system is not gradient and that differentiation and reprogramming paths will differ—a key biological insight.</p>
+<p>As a demonstration, <code>FlowClass.jl</code> includes an implementation of the stem cell differentiation model from <span class="citation" data-cites="Brackston2018">Brackston, Lakatos, and Stumpf (2018)</span>, who built on earlier work by <span class="citation" data-cites="Chickarmane2012">Chickarmane, Olariu, and Peterson (2012)</span>, which describes the dynamics of pluripotency factors (Nanog, Oct4-Sox2, Fgf4) and the differentiation marker Gata6. The model exhibits multiple stable states corresponding to pluripotent and differentiated cell fates, with a saddle point representing the transition state. Classification reveals significant curl dynamics, confirming that the system is not gradient and that differentiation and reprogramming paths will differ—a key biological insight.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode julia"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> FlowClass</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> DynamicalSystem(stem_cell_model<span class="op">,</span> <span class="fl">4</span>)</span>
@@ -338,7 +341,7 @@
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> classify_system(ds<span class="op">,</span> bounds)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>print_classification(result)</span></code></pre></div>
 <h1 id="related-software">Related Software</h1>
-<p>Several Julia packages provide complementary functionality. <code>DifferentialEquations.jl</code> <span class="citation" data-cites="Rackauckas2017">(Rackauckas and Nie 2017)</span> offers comprehensive ODE/SDE solvers but does not perform structural classification. <code>BifurcationKit.jl</code> focuses on continuation and bifurcation analysis. <code>DynamicalSystems.jl</code> <span class="citation" data-cites="Datseris2018">(Datseris 2018)</span> provides tools for chaos detection and attractor characterisation. <code>GAIO.jl</code> <span class="citation" data-cites="GAIO2025">(<strong>GAIO2025?</strong>)</span> provides numerical routines for the global analysis of dynamical systems. <code>FlowClass.jl</code> complements these by addressing a distinct question: not <em>how</em> a system behaves, but <em>what kind</em> of system it is structurally.</p>
+<p>Several Julia packages provide complementary functionality. <code>DifferentialEquations.jl</code> <span class="citation" data-cites="Rackauckas2017">(Rackauckas and Nie 2017)</span> offers comprehensive ODE/SDE solvers but does not perform structural classification. <code>BifurcationKit.jl</code> focuses on continuation and bifurcation analysis. <code>DynamicalSystems.jl</code> <span class="citation" data-cites="Datseris2018">(Datseris 2018)</span> provides tools for chaos detection and attractor characterisation. <code>GAIO.jl</code> <span class="citation" data-cites="GAIO2025">(Herwig, Junge, and Dellnitz 2025)</span> provides numerical routines for the global analysis of dynamical systems. <code>FlowClass.jl</code> complements these by addressing a distinct question: not <em>how</em> a system behaves, but <em>what kind</em> of system it is structurally.</p>
 <p>In Python, <code>PyDSTool</code> and <code>PySCeS</code> offer dynamical systems modelling for biology, but neither provides systematic structural classification. The landscape and flux decomposition methods of <span class="citation" data-cites="Wang2015">Wang (2015)</span> are related theoretically; <code>FlowClass.jl</code> provides practical tools for the classification aspect of this framework.</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>Our ability to make qualitative statements about a dynamical system depends crucially on the nature of the dynamics. The qualitative aspects can deliver profound biological systems. If stem cell differentiation were to follow gradient dynamics, for example, then the forward and backward paths through gene expression space would be identical <span class="citation" data-cites="Guillemin2021">Vittadello et al. (2025)</span>. For gradient systems, and gradient-like systems we have access to Lyapunov functions, and concepts from catastrophe theory can be applied and yield powerful insights <span class="citation" data-cites="Rand2021">(Rand et al. 2021)</span>.</p>
@@ -352,11 +355,17 @@ Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. <span>�
 <div id="ref-Brackston2018" class="csl-entry" role="doc-biblioentry">
 Brackston, Rowan D., Eszter Lakatos, and Michael P. H. Stumpf. 2018. <span>“Transition State Characteristics During Cell Differentiation.”</span> <em>PLoS Computational Biology</em> 14 (9): e1006405. <a href="https://doi.org/10.1371/journal.pcbi.1006405">https://doi.org/10.1371/journal.pcbi.1006405</a>.
 </div>
+<div id="ref-Chickarmane2012" class="csl-entry" role="doc-biblioentry">
+Chickarmane, Vijay, Victor Olariu, and Carsten Peterson. 2012. <span>“Probing the Role of Stochasticity in a Model of the Embryonic Stem Cell: Heterogeneous Gene Expression and Reprogramming Efficiency”</span> 6: 98. <a href="https://doi.org/10.1186/1752-0509-6-98">https://doi.org/10.1186/1752-0509-6-98</a>.
+</div>
 <div id="ref-Datseris2018" class="csl-entry" role="doc-biblioentry">
 Datseris, George. 2018. <span>“<span class="nocase">DynamicalSystems.jl</span>: A <span>Julia</span> Software Library for Chaos and Nonlinear Dynamics.”</span> <em>Journal of Open Source Software</em> 3 (23): 598. <a href="https://doi.org/10.21105/joss.00598">https://doi.org/10.21105/joss.00598</a>.
 </div>
 <div id="ref-Guillemin2021" class="csl-entry" role="doc-biblioentry">
 Guillemin, Agathe, and Michael P. H. Stumpf. 2021. <span>“Noise and the Molecular Processes Underlying Cell Fate Decision-Making.”</span> <em>Physical Biology</em> 18 (1): 011002. <a href="https://doi.org/10.1088/1478-3975/abc9d1">https://doi.org/10.1088/1478-3975/abc9d1</a>.
+</div>
+<div id="ref-GAIO2025" class="csl-entry" role="doc-biblioentry">
+Herwig, April, Oliver Junge, and Michael Dellnitz. 2025. <span>“GAIO.jl - a Concise Julia Package for the Global Analysis of Dynamical Systems.”</span> <em>Journal of Open Source Software</em> 10 (116): 9266. <a href="https://doi.org/10.21105/joss.09266">https://doi.org/10.21105/joss.09266</a>.
 </div>
 <div id="ref-Huang2007" class="csl-entry" role="doc-biblioentry">
 Huang, Sui, Yan-Ping Guo, Gwenael May, and Tariq Enver. 2007. <span>“Bifurcation Dynamics in Lineage-Commitment in Bipotent Progenitor Cells.”</span> <em>Developmental Biology</em> 305 (2): 695–713. <a href="https://doi.org/10.1016/j.ydbio.2007.02.036">https://doi.org/10.1016/j.ydbio.2007.02.036</a>.

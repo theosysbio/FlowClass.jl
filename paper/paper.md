@@ -1,5 +1,4 @@
 ---
----
 title: 'FlowClass.jl: Classifying Dynamical Systems by Structural Properties in Julia'
 tags:
   - Julia
