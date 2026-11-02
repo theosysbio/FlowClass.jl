@@ -39,35 +39,42 @@
         @test is_subclass(MORSE_SMALE, MORSE_SMALE)
     end
     
-    @testset "is_subclass_with_dim - Palis-Smale Theorem" begin
-        # In 2D: Morse-Smale ⊂ Structurally Stable
-        @test is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 2) == true
+    @testset "is_subclass_with_dim - Palis-Smale and Peixoto Theorems" begin
+        # Palis-Smale: Morse-Smale ⊂ Structurally Stable in every dimension
         @test is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 1) == true
-        
-        # In 3D and higher: Morse-Smale ⊄ Structurally Stable
-        @test is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 3) == false
-        @test is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 4) == false
-        
+        @test is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 2) == true
+        @test is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 3) == true
+        @test is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 4) == true
+
+        # Peixoto: in dimension ≤ 2 Structurally Stable ⊂ Morse-Smale as well
+        @test is_subclass_with_dim(STRUCTURALLY_STABLE, MORSE_SMALE, 2) == true
+        @test is_subclass_with_dim(STRUCTURALLY_STABLE, MORSE_SMALE, 3) == false
+        @test is_subclass_with_dim(STRUCTURALLY_STABLE, MORSE_SMALE, 4) == false
+
         # Gradient is always subclass (dimension-independent)
         @test is_subclass_with_dim(GRADIENT, STRUCTURALLY_STABLE, 2) == true
         @test is_subclass_with_dim(GRADIENT, STRUCTURALLY_STABLE, 5) == true
         @test is_subclass_with_dim(GRADIENT, MORSE_SMALE, 10) == true
     end
     
-    @testset "is_structurally_stable - Dimension Dependent" begin
+    @testset "is_structurally_stable - Result Predicate" begin
         fps = FixedPoint[]
         orbits = PeriodicOrbit[]
-        
-        # Morse-Smale in 2D is structurally stable
+
+        # Morse-Smale is structurally stable in every dimension (Palis-Smale)
         ms_2d = ClassificationResult(MORSE_SMALE, 2, fps, orbits, false, 0.5,
                                       true, true, true, true, :high, String[])
         @test is_structurally_stable(ms_2d) == true
-        
-        # Morse-Smale in 3D is NOT guaranteed structurally stable
+
         ms_3d = ClassificationResult(MORSE_SMALE, 3, fps, orbits, false, 0.5,
                                       true, true, true, true, :high, String[])
-        @test is_structurally_stable(ms_3d) == false
-        
+        @test is_structurally_stable(ms_3d) == true
+
+        # A gradient system with a non-hyperbolic fixed point is not structurally stable
+        grad_degenerate = ClassificationResult(GRADIENT, 1, fps, orbits, true, 0.0,
+                                               false, true, true, false, :high, String[])
+        @test is_structurally_stable(grad_degenerate) == false
+
         # Gradient is always structurally stable
         grad_2d = ClassificationResult(GRADIENT, 2, fps, orbits, true, 0.0,
                                         true, true, true, false, :high, String[])

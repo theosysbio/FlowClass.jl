@@ -2,9 +2,10 @@
 # High-level classification of dynamical systems into the hierarchy:
 # Gradient ⊂ Gradient-like ⊂ Morse-Smale ⊂ Structurally Stable ⊂ General
 #
-# IMPORTANT: Morse-Smale ⟹ Structurally Stable holds only in dimensions 1 and 2
-# (Palis-Smale theorem). In dimension ≥ 3, Morse-Smale systems are NOT necessarily
-# structurally stable.
+# Morse-Smale ⟹ Structurally Stable holds in every dimension (Palis & Smale 1970).
+# The converse, Structurally Stable ⟹ Morse-Smale, holds only for flows in
+# dimension ≤ 2 (Peixoto 1962). In dimension ≥ 3 there are structurally stable
+# systems that are not Morse-Smale (e.g. those with a Smale horseshoe).
 
 #=============================================================================
                             System Class Enum
@@ -18,7 +19,8 @@ Enumeration of dynamical system classes, ordered from most restrictive to most g
 - `GRADIENT`: dx/dt = -∇V(x) for some potential V. Symmetric Jacobian, zero curl, no periodic orbits.
 - `GRADIENT_LIKE`: Has a global Lyapunov function. Small curl, no periodic orbits.
 - `MORSE_SMALE`: Hyperbolic fixed points and periodic orbits, transverse manifold intersections.
-  Note: Morse-Smale implies structural stability only in dimensions 1 and 2.
+  Morse-Smale systems are structurally stable in every dimension (Palis & Smale 1970);
+  in dimension ≤ 2 the two classes coincide (Peixoto 1962).
 - `STRUCTURALLY_STABLE`: Qualitative behaviour unchanged under small perturbations.
 - `GENERAL`: No special structure guaranteed. May exhibit chaos, strange attractors, etc.
 - `UNDETERMINED`: Classification could not be completed (e.g., numerical issues).
@@ -474,11 +476,12 @@ function classify_system(ds::DynamicalSystem, bounds::Tuple;
     if is_ms
         verbose && println("  → MORSE_SMALE system")
         
-        # Important: Morse-Smale implies structural stability only in dim < 3
+        # Morse-Smale implies structural stability in every dimension (Palis-Smale).
+        # Only in dimension ≤ 2 are the two classes equal (Peixoto).
         if dim >= 3
-            push!(all_notes, "Morse-Smale does NOT imply structural stability in dimension ≥ 3 (Palis-Smale theorem)")
+            push!(all_notes, "Morse-Smale implies structural stability (Palis-Smale theorem); in dimension ≥ 3 the converse does not hold")
         else
-            push!(all_notes, "Morse-Smale implies structural stability in dimension < 3 (Palis-Smale theorem)")
+            push!(all_notes, "Morse-Smale implies structural stability (Palis-Smale theorem); in dimension ≤ 2 the two classes coincide (Peixoto)")
         end
         
         return ClassificationResult(
@@ -613,27 +616,16 @@ is_morse_smale(result::ClassificationResult) =
 
 Check if the classification result indicates a structurally stable system.
 
-Important: Morse-Smale systems are structurally stable only in dimensions 1 and 2.
-In dimension ≥ 3, a system classified as MORSE_SMALE is NOT guaranteed to be 
-structurally stable. This function accounts for dimension.
+Morse-Smale systems are structurally stable in every dimension (Palis & Smale 1970),
+so GRADIENT_LIKE, MORSE_SMALE and STRUCTURALLY_STABLE results all return `true`.
+GRADIENT returns `true` only if all fixed points are hyperbolic, since a gradient
+system with a degenerate critical point is not structurally stable.
 """
 function is_structurally_stable(result::ClassificationResult)
-    # Gradient and gradient-like are always structurally stable
-    if result.system_class in (GRADIENT, GRADIENT_LIKE)
-        return true
+    if result.system_class == GRADIENT
+        return result.all_fps_hyperbolic
     end
-    
-    # Morse-Smale implies structural stability only in dim < 3
-    if result.system_class == MORSE_SMALE
-        return result.dimension < 3
-    end
-    
-    # STRUCTURALLY_STABLE class
-    if result.system_class == STRUCTURALLY_STABLE
-        return true
-    end
-    
-    return false
+    return result.system_class in (GRADIENT_LIKE, MORSE_SMALE, STRUCTURALLY_STABLE)
 end
 
 """
@@ -717,14 +709,9 @@ function classification_summary(result::ClassificationResult)
     push!(lines, "  Landscape representation: $(has_landscape ? "Yes ($type)" : "No")")
     push!(lines, "  Allows periodic orbits: $(allows_periodic_orbits(result))")
     
-    # Structural stability depends on dimension for Morse-Smale systems
     struct_stable = is_structurally_stable(result)
     if result.system_class == MORSE_SMALE
-        if result.dimension < 3
-            push!(lines, "  Structurally stable: Yes (Palis-Smale theorem, dim < 3)")
-        else
-            push!(lines, "  Structurally stable: Not guaranteed (dim ≥ 3)")
-        end
+        push!(lines, "  Structurally stable: Yes (Palis-Smale theorem)")
     else
         push!(lines, "  Structurally stable: $(struct_stable)")
     end
@@ -831,8 +818,8 @@ end
 Return the hierarchy level of a system class (lower = more restrictive).
 
 Note: This returns a simple ordering that does NOT account for dimension.
-In dimension ≥ 3, MORSE_SMALE and STRUCTURALLY_STABLE are not comparable
-via this ordering alone. Use `is_subclass_with_dim` for dimension-aware checks.
+In dimension ≤ 2, MORSE_SMALE and STRUCTURALLY_STABLE coincide (Peixoto).
+Use `is_subclass_with_dim` for dimension-aware checks.
 """
 function class_hierarchy_level(class::SystemClass)
     levels = Dict(
@@ -853,9 +840,9 @@ Check if class1 is a subclass of (more restrictive than) class2.
 
 For example, GRADIENT is a subclass of GRADIENT_LIKE.
 
-Warning: This function does NOT account for dimension. In dimension ≥ 3, 
-MORSE_SMALE is NOT a subclass of STRUCTURALLY_STABLE. Use `is_subclass_with_dim`
-for dimension-aware comparisons.
+Note: This function does NOT account for dimension. MORSE_SMALE is a subclass
+of STRUCTURALLY_STABLE in every dimension; in dimension ≤ 2 the reverse inclusion
+also holds. Use `is_subclass_with_dim` for dimension-aware comparisons.
 """
 function is_subclass(class1::SystemClass, class2::SystemClass)
     return class_hierarchy_level(class1) <= class_hierarchy_level(class2)
@@ -866,29 +853,26 @@ end
 
 Check if class1 is a subclass of class2, accounting for dimension.
 
-The key dimension-dependent relationship:
-- dim < 3: MORSE_SMALE ⊂ STRUCTURALLY_STABLE (Palis-Smale theorem)
-- dim ≥ 3: MORSE_SMALE and STRUCTURALLY_STABLE are not comparable
+The dimension-dependent relationships:
+- Every dimension: MORSE_SMALE ⊂ STRUCTURALLY_STABLE (Palis-Smale theorem)
+- dim ≤ 2: STRUCTURALLY_STABLE ⊂ MORSE_SMALE as well, so the classes coincide (Peixoto)
+- dim ≥ 3: STRUCTURALLY_STABLE ⊄ MORSE_SMALE (e.g. Smale horseshoe)
 
 # Examples
 ```julia
-is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 2)  # true
-is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 3)  # false
+is_subclass_with_dim(MORSE_SMALE, STRUCTURALLY_STABLE, 3)  # true (any dimension)
+is_subclass_with_dim(STRUCTURALLY_STABLE, MORSE_SMALE, 2)  # true (Peixoto)
+is_subclass_with_dim(STRUCTURALLY_STABLE, MORSE_SMALE, 3)  # false
 is_subclass_with_dim(GRADIENT, MORSE_SMALE, 5)             # true (always)
 ```
 """
 function is_subclass_with_dim(class1::SystemClass, class2::SystemClass, dim::Int)
-    # Gradient and Gradient-like are always subclasses of everything above them
-    if class1 in (GRADIENT, GRADIENT_LIKE)
-        return class_hierarchy_level(class1) <= class_hierarchy_level(class2)
+    # In dimension ≤ 2, structurally stable flows are Morse-Smale (Peixoto)
+    if class1 == STRUCTURALLY_STABLE && class2 == MORSE_SMALE
+        return dim <= 2
     end
-    
-    # The key case: MORSE_SMALE → STRUCTURALLY_STABLE only in dim < 3
-    if class1 == MORSE_SMALE && class2 == STRUCTURALLY_STABLE
-        return dim < 3
-    end
-    
-    # For other comparisons, use standard hierarchy
+
+    # All other comparisons follow the standard hierarchy
     return class_hierarchy_level(class1) <= class_hierarchy_level(class2)
 end
 

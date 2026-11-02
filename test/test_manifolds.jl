@@ -316,8 +316,13 @@
         
         @test stable.dimension == 2
         @test unstable.dimension == 1
+
+        # The 2D stable manifold must extend away from the saddle (traced by
+        # backward integration) and stay in the y-z plane
+        @test maximum(norm.(stable.points)) > 0.1
+        @test all(p -> abs(p[1]) < 1e-8, stable.points)
     end
-    
+
     @testset "Homoclinic Orbit Detection - No Homoclinic" begin
         # Simple linear saddle - no homoclinic connection
         saddle = DynamicalSystem(x -> [x[1], -x[2]], 2)

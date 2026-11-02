@@ -110,7 +110,7 @@ Summary statistics from classifying a single parameter realisation.
 struct ClassificationSummary
     params::NamedTuple
     system_class::SystemClass
-    jacobian_symmetry::Float64
+    jacobian_symmetric::Bool
     curl_ratio::Float64
     n_fixed_points::Int
     is_valid::Bool  # Whether classification succeeded without errors
@@ -149,8 +149,8 @@ function classify_with_params(params;
         return ClassificationSummary(
             params,
             result.system_class,
-            result.jacobian_symmetry,
-            result.curl_gradient_ratio,
+            result.jacobian_symmetric,
+            result.curl_ratio,
             length(result.fixed_points),
             true
         )
@@ -158,8 +158,8 @@ function classify_with_params(params;
         # Return a failed classification
         return ClassificationSummary(
             params,
-            GENERAL,
-            NaN,
+            UNDETERMINED,
+            false,
             NaN,
             0,
             false
@@ -418,7 +418,7 @@ function classify_reference_parameters(; L::Float64=50.0, verbose::Bool=true)
     
     if verbose
         println("Classification: $(summary.system_class)")
-        @printf("Jacobian symmetry error: %.6f\n", summary.jacobian_symmetry)
+        println("Jacobian symmetric: $(summary.jacobian_symmetric)")
         @printf("Curl/gradient ratio: %.6f\n", summary.curl_ratio)
         @printf("Fixed points found: %d\n", summary.n_fixed_points)
         println("=" ^ 70)

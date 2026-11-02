@@ -178,7 +178,7 @@ end
 Compute the local portion of a stable or unstable manifold near a fixed point.
 
 Starting from small perturbations along the tangent directions, integrates
-trajectories forward (stable) or backward (unstable) to trace out the manifold.
+trajectories backward (stable) or forward (unstable) to trace out the manifold.
 """
 function compute_local_manifold(ds::DynamicalSystem, fp::Vector{Float64},
                                  tangent_vectors::Vector{Vector{Float64}},
@@ -232,8 +232,11 @@ function compute_local_manifold(ds::DynamicalSystem, fp::Vector{Float64},
     # Integrate each initial condition
     manifold_points = [copy(fp)]  # Include the fixed point
     
-    # Direction of integration: forward for stable, backward for unstable
-    tspan = manifold_type == STABLE_MANIFOLD ? (0.0, integration_time) : (0.0, -integration_time)
+    # Direction of integration. Points on the stable manifold approach the fixed
+    # point forward in time, so the manifold is traced away from the fixed point
+    # by integrating BACKWARD; the unstable manifold is traced FORWARD.
+    # (This matches grow_manifold_1d.)
+    tspan = manifold_type == STABLE_MANIFOLD ? (0.0, -integration_time) : (0.0, integration_time)
     
     for x0 in initial_points
         prob = ODEProblem((u, p, t) -> ds.f(u), x0, tspan)

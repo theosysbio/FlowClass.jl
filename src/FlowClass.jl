@@ -2,7 +2,7 @@
     FlowClass.jl
 
 A Julia package for classifying dynamical systems into hierarchical categories:
-Gradient, Gradient-like, Morse-Smale, Generic, Structurally Stable, and General.
+Gradient, Gradient-like, Morse-Smale, Structurally Stable, and General.
 
 The classification is based on properties such as:
 - Jacobian symmetry (gradient systems have symmetric Jacobians)
@@ -36,14 +36,12 @@ is_jacobian_symmetric(J)
 
 3. **Morse-Smale Systems**: Hyperbolic fixed points and periodic orbits
    - Transverse intersection of stable/unstable manifolds
+   - Structurally stable in every dimension (Palis & Smale 1970)
 
-4. **Generic Systems**: Structurally stable except at bifurcation points
-   - May have non-hyperbolic points at bifurcations
+4. **Structurally Stable Systems**: Qualitative behaviour unchanged under perturbation
+   - Equal to Morse-Smale in dimension ≤ 2 (Peixoto 1962); larger in dimension ≥ 3
 
-5. **Structurally Stable Systems**: Qualitative behaviour unchanged under perturbation
-   - All fixed points hyperbolic, transverse manifold intersections
-
-6. **General Dynamical Systems**: No restrictions
+5. **General Dynamical Systems**: No restrictions
    - May exhibit chaos, strange attractors, etc.
 """
 module FlowClass

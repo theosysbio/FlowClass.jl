@@ -206,7 +206,7 @@ relative_curl_magnitude(J_antisym)  # ≈ 1.0
 
 # Mixed system
 J_mixed = [-1.0 1.0; -1.0 -1.0]
-relative_curl_magnitude(J_mixed)  # ≈ 0.5
+relative_curl_magnitude(J_mixed)  # ≈ 0.707 (= 1/√2)
 ```
 """
 function relative_curl_magnitude(J::AbstractMatrix)
