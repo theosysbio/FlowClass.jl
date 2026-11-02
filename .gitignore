@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Julia: packages should not pin a Manifest
+/Manifest.toml
+/test/Manifest.toml
+/docs/Manifest.toml
+
+# LaTeX build artefacts
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+paper/bioinformatics_appnote.pdf
+
+# Third-party journal template (ships with TeX Live / Overleaf)
+paper/oup-authoring-template/
+paper/oup-authoring-template.zip
+paper/manifest.txt

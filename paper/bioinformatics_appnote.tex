@@ -1,0 +1,249 @@
+%=============================================================================
+% FlowClass.jl — Application Note for Bioinformatics (Oxford University Press)
+%
+% This file targets the OUP authoring class "oup-authoring-template.cls" as
+% shipped with TeX Live (Document Class 2022/03/18 v1.1). It also compiles
+% unchanged on Overleaf ("Oxford University Press - Contemporary").
+%
+% Note: the contemporary/modern header normally includes a society logo file
+% (PNAS-Nexus-Logo-CMYK) that ships only with the Overleaf project, not the
+% TeX Live package, so we blank \societylogo below to compile locally. Remove
+% that line if you compile on Overleaf and want the journal furniture.
+%
+% Article type: Application Note (max ~2,600 words, or ~2,000 words + 1 figure).
+% Bibliography uses paper.bib; style oup-abbrvnat.bst ships with the template.
+%=============================================================================
+
+\documentclass[unnumsec,webpdf,contemporary,large,namedate]{oup-authoring-template}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+
+% Blank the society logo so the document compiles without the OUP logo file.
+\makeatletter
+\def\societylogo{}
+\makeatother
+
+% ---- Journal metadata -------------------------------------------------------
+\journaltitle{Bioinformatics}
+\DOI{DOI added during production}
+\copyrightyear{2026}
+\pubyear{2026}
+\vol{00}
+\issue{0}
+\access{Advance Access Publication Date: }
+\appnotes{Application Note}
+
+%=============================================================================
+\begin{document}
+
+\title[FlowClass.jl]{FlowClass.jl: structural classification of dynamical
+systems for landscape models of cell fate}
+
+\author[1,2,3,$\ast$]{Michael P.H. Stumpf\ORCID{0000-0002-3577-1222}}
+
+\address[1]{\orgdiv{School of BioSciences}, \orgname{University of Melbourne},
+\orgaddress{\street{}, \postcode{3010}, \state{Victoria}, \country{Australia}}}
+\address[2]{\orgdiv{School of Mathematics and Statistics},
+\orgname{University of Melbourne},
+\orgaddress{\postcode{3010}, \state{Victoria}, \country{Australia}}}
+\address[3]{\orgname{Cell Bauhaus Pty Ltd},
+\orgaddress{\state{Melbourne}, \country{Australia}}}
+
+\corresp[$\ast$]{Corresponding author.
+\href{mailto:mstumpf@theosysbio.org}{mstumpf@theosysbio.org}}
+
+%\received{}{}{}
+%\revised{}{}{}
+%\accepted{}{}{}
+
+% ---- Structured abstract ----------------------------------------------------
+\abstract{
+\textbf{Summary:}
+Whether a dynamical model of a biological system can be understood as motion on
+a potential landscape depends on its structural class. \texttt{FlowClass.jl} is a Julia package that
+classifies a continuous-time system $\mathrm{d}\bm{x}/\mathrm{d}t =
+\bm{F}(\bm{x})$ into a nested hierarchy of structural classes, namely gradient,
+gradient-like, Morse-Smale, structurally stable, and general. It applies a
+suite of tests, including Jacobian symmetry analysis, curl
+quantification, fixed-point detection and stability classification, periodic-orbit
+detection by Poincar\'e section with Floquet analysis, and stable and unstable
+manifold computation, and returns the class together with the underlying
+quantitative measures. The package is aimed at developmental and systems
+biology, where it tests if a Waddington landscape
+interpretation is justified for a given gene regulatory model and quantify the
+non-gradient (curl) flux that distinguishes forward differentiation from
+reprogramming.\\
+\textbf{Availability and implementation:}
+\texttt{FlowClass.jl} is open source under the MIT licence and is
+available at \href{https://github.com/Theosysbio/FlowClass.jl}{https://github.com/Theosysbio/FlowClass.jl},
+with an archived release on Zenodo. Documentation, worked examples, and a test
+suite are included in the repository.\\
+\textbf{Contact:} \href{mailto:mstumpf@theosysbio.org}{mstumpf@theosysbio.org}\\
+%\textbf{Supplementary information:} Supplementary data are available at
+%\textit{Bioinformatics} online.
+}
+
+\keywords{dynamical systems, Waddington landscape, cell fate, gradient systems,
+Morse-Smale, Julia}
+
+\maketitle
+
+%=============================================================================
+\section{Introduction}
+
+Dynamical systems models of the form $\mathrm{d}\bm{x}/\mathrm{d}t =
+\bm{F}(\bm{x})$ are ubiquitous across biology, physics, and engineering
+\citep{Strogatz2015}. Dynamical systems that can be described in terms of a potential landscape are of particular interest.  
+In developmental biology, following Waddington, they have become a popular and convenient descriptions of  Waddington's epigenetic landscape, which remains a dominant metaphor for cell differentiation
+\citep{Waddington1957, Huang2007, Moris2016}. Much of the intuition built on
+that metaphor implicitly assumes gradient dynamics, yet most gene regulatory
+networks are not gradient systems: non-reciprocal regulatory interactions
+generate curl, or flux, components that no potential can represent
+\citep{Brackston2018, Wang2015}.
+
+The distinction is not merely formal. For a gradient system the potential fully
+determines the dynamics, and the minimum action paths for a transition and its
+reverse coincide. Even for moderate curl fluxes, forward and reverse
+paths separate, and differentiation and reprogramming follow
+different routes through gene expression space \citep{Brackston2018,
+Guillemin2021}. More generally, the structural class of a model  controls which
+analytical tools can be applied: gradient and gradient-like systems admit global Lyapunov
+functions and the machinery of catastrophe theory \citep{Rand2021}, whereas more
+general systems do not \citep{Smale1967, PalisDeMelo1982}.
+
+There is a lack of general-purpose tools  for classifying dynamical systems by their structural properties.
+Existing Julia packages address related  problems, including solving ODEs and SDEs
+in \texttt{DifferentialEquations.jl} \citep{Rackauckas2017}, chaos and
+attractor analysis in \texttt{DynamicalSystems.jl} \citep{Datseris2018}, and
+global set-oriented analysis in \texttt{GAIO.jl} \citep{GAIO2025}. None of these 
+determine the qualitative structural nature of a specific vector field. \texttt{FlowClass.jl} fills this gap and places a system within a nested hierarchy of structural classes and reports the evidence behind the assignment.
+
+\section{Features and implementation}
+
+\texttt{FlowClass.jl} is written in  Julia \citep{Bezanson:2017,
+Roesch2023} and depends only on \texttt{ForwardDiff.jl} for automatic
+differentiation, \texttt{NLsolve.jl} for nonlinear solving, and
+\texttt{OrdinaryDiffEq.jl} for trajectory integration. A system is defined by
+wrapping a vector field in a \texttt{DynamicalSystem} object, after which a
+single call to \texttt{classify\_system} runs the full analysis and returns a
+\texttt{ClassificationResult}. The results contain the assigned class, 
+detected invariant seta, the quantitative measures described below, and a
+confidence level. The classification hierarchy runs from the most restrictive
+class to the most general as gradient $\subset$ gradient-like $\subset$
+Morse-Smale $\subset$ structurally stable $\subset$ general, and the pipeline
+moves through the tests in sequence.
+
+\paragraph{Jacobians}
+ Jacobians are evaluated by automatic
+differentiation, which avoids finite-difference error. A gradient system
+$\bm{F} = -\nabla V$ has a Jacobian equal to the negative Hessian of $V$ and so
+is symmetric everywhere. The scale-independent relative symmetry error $\|(J -
+J^{\top})/2\|_F / \|J\|_F$ quantifies the departure from gradient structure and
+is sampled across  regions of interest.
+
+The package computes the curl directly in two and three dimensions, and uses the Frobenius norm of the antisymmetric part of
+the Jacobian  in higher dimensions. The curl-to-gradient ratio measures the relative strength of rotational versus potential-driven
+dynamics. This is key diagnostic for whether a landscape description is
+appropriate.
+
+
+ Fixed points are located by multi-start solving from Latin hypercube starting points within user-specified bounds, then
+aggregated by clustering. Each point is classified from its Jacobian  as a stable or unstable node, saddle, focus, centre, or
+non-hyperbolic point. A non-hyperbolic fixed point excludes the system from the
+Morse-Smale class.
+
+ Limit cycles are detected from recurrence along
+integrated trajectories and refined on a Poincar\'e section, and their stability
+is determined from the Floquet multipliers of the monodromy matrix. Gradient and
+gradient-like systems cannot support periodic orbits, so their presence puts a
+system at least in the Morse-Smale class.
+
+For saddle points the package integrates the
+stable and unstable manifolds from initial conditions perturbed along eigenvector
+directions, detects homoclinic connections, and tests numerically whether the
+manifolds intersect transversally, a requirement for Morse-Smale structure.
+
+These analyses are combined by \texttt{classify\_system}, with lighter-weight
+\texttt{quick\_classify} and \texttt{get\_system\_class} functions providing more limited but  rapid
+screening. Queries such as \texttt{is\_gradient},
+\texttt{allows\_periodic\_orbits}, and \texttt{has\_landscape\_representation}
+translate the result into the landscape interpretation, and
+\texttt{print\_classification} produces a formatted report.
+
+\section{Example: stem cell differentiation}
+
+To illustrate the package on a biological model, \texttt{FlowClass.jl} ships with
+the embryonic stem cell differentiation model of \citet{Brackston2018}, itself
+built on \citet{Chickarmane2012}, which describes the pluripotency factors Nanog,
+Oct4-Sox2, and Fgf4  and the differentiation marker Gata6. The four-dimensional system has multiple stable fixed
+points corresponding to pluripotent and differentiated cell fates, separated by a
+saddle that represents the transition state;  the locations of these states
+shift as  external signals change.
+
+Running \texttt{classify\_system} on this model recovers the bistable structure
+and  returns a non-negligible curl-to-gradient ratio. The practical consequence is that the landscape, while a useful
+organizing picture, does not by itself fix the dynamics, and the paths taken
+during differentiation and during reprogramming are distinct
+\citep{Brackston2018, Guillemin2021, Vittadello2025}. Being able to quantify
+this flux directly from the model, rather than assuming it, is what makes
+landscape-based inference from single-cell data well posed \citep{Liu2024}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{JOSS-Fig1.pdf}
+\caption{Waddington's epigenetic landscape with potential wells corresponding to
+cell fates. On the left the flow is purely gradient and is fully determined by
+the landscape. On the right the flow carries a curl component, so the dynamics
+are no longer fixed by the landscape and forward and reverse transition paths
+differ. \texttt{FlowClass.jl} distinguishes these regimes automatically and
+quantifies the curl contribution.}
+\label{fig:landscape}
+\end{figure}
+
+\section{Discussion}
+
+The qualitative statements we can make about a biological model depend
+critically on its structural class. \texttt{FlowClass.jl} makes that class an
+explicit, testable property rather than an unstated assumption, and reports the
+quantitative measures, Jacobian symmetry, curl ratio, fixed-point types, and
+orbit stability, on which the assignment rests. Where existing tools ask how a
+system behaves, \texttt{FlowClass.jl} asks what kind of system it is, and the two
+are complementary: a structural classification is a natural first step before
+bifurcation continuation, landscape reconstruction, or action-path calculation.
+For developmental biology in particular, the package offers a direct check on
+when the Waddington metaphor is sound and a measurement of the non-equilibrium
+flux that it omits.
+
+\section*{Acknowledgements}
+
+The author thanks members of the Theoretical Systems Biology group for testing
+and feedback.
+
+\section*{Author contributions}
+
+M.P.H.S. conceived the work, implemented the software, and wrote the manuscript.
+
+\section*{Conflict of interest}
+
+The author is a director, shareholder and chief scientific officer  of Cell Bauhaus Pty Ltd. No other conflicts are
+declared.
+
+\section*{Funding}
+
+This work was supported by the Australian Research Council through an ARC
+Laureate Fellowship (FL220100005).
+
+\section*{Data availability}
+
+No new data were generated in support of this work. The software, documentation,
+worked examples, and test suite are available at
+\url{https://github.com/Theosysbio/FlowClass.jl} and in an archived Zenodo
+release (10.5281/zenodo.20807340).
+
+\bibliographystyle{abbrvnat}
+\bibliography{paper}
+
+\end{document}
